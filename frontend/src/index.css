@@ -1,0 +1,148 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 150 8% 97%;
+    --foreground: 215 28% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 12%;
+    --muted: 150 6% 93%;
+    --muted-foreground: 215 12% 42%;
+    --border: 214 20% 88%;
+    --input: 214 20% 85%;
+    --ring: 172 66% 32%;
+    --primary: 172 66% 26%;
+    --primary-foreground: 0 0% 98%;
+    --accent: 172 40% 92%;
+    --accent-foreground: 172 66% 20%;
+    --sidebar: 217 33% 12%;
+    --sidebar-foreground: 215 20% 80%;
+    --success: 152 60% 36%;
+    --warning: 35 92% 44%;
+    --danger: 356 75% 50%;
+    color-scheme: light;
+  }
+
+  .dark {
+    --background: 222 32% 7%;
+    --foreground: 210 24% 94%;
+    --card: 221 30% 10%;
+    --card-foreground: 210 24% 94%;
+    --muted: 220 24% 14%;
+    --muted-foreground: 215 16% 65%;
+    --border: 220 20% 20%;
+    --input: 220 20% 24%;
+    --ring: 172 66% 50%;
+    --primary: 172 58% 42%;
+    --primary-foreground: 222 32% 7%;
+    --accent: 172 35% 18%;
+    --accent-foreground: 172 50% 75%;
+    --sidebar: 222 34% 9%;
+    --sidebar-foreground: 215 20% 78%;
+    --success: 152 55% 45%;
+    --warning: 35 90% 55%;
+    --danger: 356 78% 62%;
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(1000px 500px at 100% -10%, hsl(var(--accent) / 0.55), transparent 60%),
+      radial-gradient(800px 400px at -10% 110%, hsl(var(--accent) / 0.4), transparent 55%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Motion safety: honor the OS reduced-motion preference everywhere. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-card/70 backdrop-blur-xl border border-border/70 shadow-soft;
+  }
+
+  .glass-strong {
+    @apply bg-card/85 backdrop-blur-2xl border border-border/70 shadow-soft;
+  }
+
+  .nav-item {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-white/5 hover:text-white;
+  }
+
+  .nav-item-active {
+    @apply bg-white/10 text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/_0.06)];
+  }
+
+  .field-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
+  }
+
+  /* ----------------------------------------------------------- 3D depth */
+  .scene {
+    perspective: 1200px;
+    perspective-origin: 50% 50%;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .lift-3d {
+    transform-style: preserve-3d;
+    transition:
+      transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .lift-3d:hover {
+    transform: translateZ(16px) rotateX(3deg);
+    box-shadow: 0 22px 44px -24px rgb(15 23 42 / 0.4);
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+}
