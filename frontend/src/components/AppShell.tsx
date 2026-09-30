@@ -139,7 +139,10 @@ export function AppShell() {
       )}
 
       {/* Main column */}
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="workspace-surface relative flex min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="app-depth-grid pointer-events-none absolute inset-0 z-[-1] opacity-40" aria-hidden="true" />
+        <div className="workspace-orb -right-40 top-8" aria-hidden="true" />
+        <div className="workspace-orb -bottom-52 -left-44 opacity-[0.14]" aria-hidden="true" />
         <header className="sticky top-0 z-30 border-b border-border/60 bg-background/75 backdrop-blur-xl">
           <div className="flex h-14 items-center justify-between gap-3 px-4 sm:px-6">
             <div className="flex items-center gap-3">

@@ -3,7 +3,9 @@ import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { AppShell } from "./components/AppShell";
 import { Skeleton } from "./components/ui";
 
-const Landing = lazy(() => import("./pages/Landing"));
+// The home page is the first meaningful paint. Keep it in the entry chunk so
+// visitors never wait on a second request before seeing the primary CTA.
+import Landing from "./pages/Landing";
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const Documents = lazy(() => import("./pages/Documents"));
 const ScanUpload = lazy(() => import("./pages/ScanUpload"));

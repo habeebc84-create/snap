@@ -65,6 +65,15 @@
     background-attachment: fixed;
   }
 
+  .app-depth-grid {
+    background-image:
+      linear-gradient(hsl(var(--border) / 0.32) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.32) 1px, transparent 1px);
+    background-position: center center;
+    background-size: 44px 44px;
+    mask-image: linear-gradient(to bottom, black, transparent 72%);
+  }
+
   ::selection {
     @apply bg-primary/20;
   }
@@ -133,6 +142,28 @@
   .lift-3d:hover {
     transform: translateZ(16px) rotateX(3deg);
     box-shadow: 0 22px 44px -24px rgb(15 23 42 / 0.4);
+  }
+
+  .workspace-surface {
+    isolation: isolate;
+  }
+
+  .workspace-orb {
+    position: absolute;
+    z-index: -1;
+    width: 26rem;
+    height: 26rem;
+    border-radius: 9999px;
+    filter: blur(64px);
+    opacity: 0.22;
+    pointer-events: none;
+    background: hsl(var(--primary));
+    animation: drift-orb 16s ease-in-out infinite alternate;
+  }
+
+  @keyframes drift-orb {
+    from { transform: translate3d(-8%, -4%, 0) scale(0.92); }
+    to { transform: translate3d(12%, 8%, 0) scale(1.1); }
   }
 
   .scrollbar-thin {
