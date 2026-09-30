@@ -1,0 +1,34 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: securedoc-backend
+    environment:
+      APP_ENV: production
+      DATABASE_URL: sqlite:////app/data/securedoc.db
+      DOCUMENT_STORAGE_PATH: /app/data/documents
+      PROCESSED_PATH: /app/data/processed
+      EXPORTS_PATH: /app/data/exports
+      MODEL_PATH: /app/models
+      OCR_LANG: eng
+      CONFIDENCE_THRESHOLD: "0.75"
+      CLOUD_PROCESSING: "false"
+      TELEMETRY: "false"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: securedoc-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped

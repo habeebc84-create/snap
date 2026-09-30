@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Local data (documents, OCR text, SQLite database, exports)
+data/documents/
+data/processed/
+data/exports/
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# Local configuration / secrets
+.env
+.env.local
+
+# Editors / OS
+.DS_Store
+*.log
+
+# Tool caches / runtime state
+.vite/
+.vly-run/
