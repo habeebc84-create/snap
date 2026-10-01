@@ -4,46 +4,46 @@
 
 @layer base {
   :root {
-    --background: 210 20% 98%;
-    --foreground: 222 47% 11%;
+    --background: 150 8% 97%;
+    --foreground: 215 28% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
-    --muted: 210 20% 95%;
-    --muted-foreground: 215 16% 47%;
-    --border: 214 20% 89%;
-    --input: 214 20% 89%;
-    --ring: 221 83% 53%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 210 40% 98%;
-    --accent: 210 40% 94%;
-    --accent-foreground: 222 47% 11%;
-    --sidebar: 222 47% 10%;
-    --sidebar-foreground: 215 20% 85%;
-    --success: 158 64% 38%;
-    --warning: 38 92% 50%;
-    --danger: 350 89% 60%;
+    --card-foreground: 215 28% 12%;
+    --muted: 150 6% 93%;
+    --muted-foreground: 215 12% 42%;
+    --border: 214 20% 88%;
+    --input: 214 20% 85%;
+    --ring: 172 66% 32%;
+    --primary: 172 66% 26%;
+    --primary-foreground: 0 0% 98%;
+    --accent: 172 40% 92%;
+    --accent-foreground: 172 66% 20%;
+    --sidebar: 217 33% 12%;
+    --sidebar-foreground: 215 20% 80%;
+    --success: 152 60% 36%;
+    --warning: 35 92% 44%;
+    --danger: 356 75% 50%;
     color-scheme: light;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-    --muted: 217 33% 13%;
-    --muted-foreground: 215 20% 65%;
-    --border: 217 33% 15%;
-    --input: 217 33% 15%;
-    --ring: 217 91% 60%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 222 47% 11%;
-    --accent: 217 33% 13%;
-    --accent-foreground: 210 40% 98%;
-    --sidebar: 224 71% 4%;
-    --sidebar-foreground: 215 20% 82%;
-    --success: 158 64% 45%;
-    --warning: 38 92% 55%;
-    --danger: 350 89% 65%;
+    --background: 222 32% 7%;
+    --foreground: 210 24% 94%;
+    --card: 221 30% 10%;
+    --card-foreground: 210 24% 94%;
+    --muted: 220 24% 14%;
+    --muted-foreground: 215 16% 65%;
+    --border: 220 20% 20%;
+    --input: 220 20% 24%;
+    --ring: 172 66% 50%;
+    --primary: 172 58% 42%;
+    --primary-foreground: 222 32% 7%;
+    --accent: 172 35% 18%;
+    --accent-foreground: 172 50% 75%;
+    --sidebar: 222 34% 9%;
+    --sidebar-foreground: 215 20% 78%;
+    --success: 152 55% 45%;
+    --warning: 35 90% 55%;
+    --danger: 356 78% 62%;
     color-scheme: dark;
   }
 
@@ -60,15 +60,15 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     background-image:
-      radial-gradient(1000px 500px at 100% -10%, hsl(var(--primary) / 0.12), transparent 60%),
-      radial-gradient(800px 400px at -10% 110%, hsl(var(--ring) / 0.1), transparent 55%);
+      radial-gradient(1000px 500px at 100% -10%, hsl(var(--accent) / 0.55), transparent 60%),
+      radial-gradient(800px 400px at -10% 110%, hsl(var(--accent) / 0.4), transparent 55%);
     background-attachment: fixed;
   }
 
   .app-depth-grid {
     background-image:
-      linear-gradient(hsl(var(--border) / 0.35) 1px, transparent 1px),
-      linear-gradient(90deg, hsl(var(--border) / 0.35) 1px, transparent 1px);
+      linear-gradient(hsl(var(--border) / 0.32) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border) / 0.32) 1px, transparent 1px);
     background-position: center center;
     background-size: 44px 44px;
     mask-image: linear-gradient(to bottom, black, transparent 72%);
@@ -83,6 +83,7 @@
     outline-offset: 2px;
   }
 
+  /* Motion safety: honor the OS reduced-motion preference everywhere. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -97,25 +98,37 @@
 
 @layer components {
   .glass {
-    @apply bg-card/80 backdrop-blur-xl border border-border/70 shadow-soft;
+    @apply bg-card/70 backdrop-blur-xl border border-border/70 shadow-soft;
   }
 
   .glass-strong {
-    @apply bg-card/90 backdrop-blur-2xl border border-border/80 shadow-soft;
+    @apply bg-card/85 backdrop-blur-2xl border border-border/70 shadow-soft;
   }
 
   .nav-item {
-    @apply flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-sidebar-foreground/80 transition-all hover:bg-white/10 hover:text-white;
+    @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-foreground/80 transition-colors hover:bg-white/5 hover:text-white;
   }
 
   .nav-item-active {
-    @apply bg-primary text-primary-foreground font-semibold shadow-md;
+    @apply bg-white/10 text-white shadow-[inset_0_1px_0_hsl(0_0%_100%/_0.06)];
   }
 
   .field-label {
     @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
   }
 
+  /* ----------------------------------------------------------- 3D depth
+     Perspective must live on the element that is *itself* transformed
+     (via `transformPerspective` in framer-motion, or a `perspective()`
+     function inside the CSS transform). Putting `perspective` on a grid
+     container tilts every card around the grid's centre instead of its own,
+     which is what made the card grid look skewed. */
+  .depth-3d {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* Kept for a container that genuinely wants one shared vanishing point. */
   .scene {
     perspective: 1200px;
     perspective-origin: 50% 50%;
@@ -131,15 +144,20 @@
 
   .lift-3d {
     transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
     transition:
       transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 0.35s ease,
       border-color 0.35s ease;
   }
 
+  /* `perspective()` belongs inside the transform — perspective set on the
+     element itself only affects its children, so the previous hover read as
+     a flat squish with no depth. */
   .lift-3d:hover {
-    transform: translateY(-2px) translateZ(12px);
-    box-shadow: 0 16px 32px -16px rgb(15 23 42 / 0.15);
+    transform: perspective(900px) translateZ(14px) rotateX(2.5deg);
+    box-shadow: 0 22px 44px -24px rgb(15 23 42 / 0.4);
   }
 
   .workspace-surface {
@@ -162,6 +180,20 @@
   @keyframes drift-orb {
     from { transform: translate3d(-8%, -4%, 0) scale(0.92); }
     to { transform: translate3d(12%, 8%, 0) scale(1.1); }
+  }
+
+  /* Never apply depth transforms when the OS asks for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .depth-3d,
+    .scene,
+    .lift-3d {
+      transform-style: flat;
+      perspective: none;
+      will-change: auto;
+    }
+    .lift-3d:hover {
+      transform: none;
+    }
   }
 
   .scrollbar-thin {

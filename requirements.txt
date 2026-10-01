@@ -1,5 +1,8 @@
+# Runtime dependencies for the Vercel Python function (api/index.py).
+# Mirrors backend/requirements.txt WITHOUT dev/test tooling and without
+# onnxruntime (the classifier falls back to the deterministic heuristic when no
+# ONNX model is present, so the optional runtime is never imported).
 fastapi==0.115.6
-uvicorn[standard]==0.32.1
 python-multipart==0.0.19
 pydantic==2.10.4
 SQLAlchemy==2.0.36
@@ -10,6 +13,3 @@ pytesseract==0.3.13
 numpy==1.26.4
 openpyxl==3.1.5
 reportlab==4.2.5
-onnxruntime==1.20.1
-pytest==8.3.4
-httpx==0.28.1

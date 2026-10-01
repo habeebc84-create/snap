@@ -1,0 +1,12 @@
+# Keep the Vercel build/upload lean.
+.venv/
+frontend/node_modules/
+frontend/dist/
+dist/
+__pycache__/
+*.pyc
+.pytest_cache/
+data/
+files/
+.git/
+*.log

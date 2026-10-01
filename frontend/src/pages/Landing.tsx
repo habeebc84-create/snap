@@ -146,8 +146,9 @@ export default function Landing() {
     damping: 18,
   });
 
-  const handleTiltMove = (event: React.MouseEvent<HTMLDivElement>) => {
-    if (reduceMotion || !tiltRef.current) return;
+  const handleTiltMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    // Touch has no hover, so tilting on it only fights the scroll gesture.
+    if (reduceMotion || event.pointerType === "touch" || !tiltRef.current) return;
     const rect = tiltRef.current.getBoundingClientRect();
     pointerX.set((event.clientX - rect.left) / rect.width - 0.5);
     pointerY.set((event.clientY - rect.top) / rect.height - 0.5);
@@ -286,17 +287,17 @@ export default function Landing() {
             initial={reduceMotion ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            onMouseMove={handleTiltMove}
-            onMouseLeave={handleTiltLeave}
+            onPointerMove={handleTiltMove}
+            onPointerLeave={handleTiltLeave}
             style={
               reduceMotion
                 ? undefined
                 : { rotateX, rotateY, transformPerspective: 1200 }
             }
-            className="scene preserve-3d relative"
+            className="depth-3d relative will-change-transform"
           >
             <motion.div
-              className="glass preserve-3d rounded-2xl p-4 sm:p-5"
+              className="glass depth-3d rounded-2xl p-4 sm:p-5"
               animate={reduceMotion ? undefined : { y: [0, -7, 0] }}
               transition={
                 reduceMotion
@@ -385,7 +386,7 @@ export default function Landing() {
             </p>
           </div>
 
-          <ol className="scene mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-9">
+          <ol className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-9">
             {PIPELINE_STAGES.map((stage, index) => (
               <motion.li
                 key={stage.label}
@@ -396,9 +397,14 @@ export default function Landing() {
                 whileHover={
                   reduceMotion
                     ? undefined
-                    : { y: -6, rotateX: 8, transition: { duration: 0.2 } }
+                    : {
+                        y: -6,
+                        rotateX: 8,
+                        transformPerspective: 900,
+                        transition: { duration: 0.2 },
+                      }
                 }
-                className="group relative rounded-xl border border-border/60 bg-background/70 p-3 transition-all hover:border-emerald-500/40 hover:shadow-soft"
+                className="depth-3d group relative rounded-xl border border-border/60 bg-background/70 p-3 transition-colors duration-200 hover:border-emerald-500/40 hover:shadow-soft"
               >
                 <span className="absolute right-2.5 top-2.5 text-[10px] text-muted-foreground/70">
                   {index + 1}
@@ -435,7 +441,7 @@ export default function Landing() {
           </div>
 
           <motion.div
-            className="scene mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+            className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             initial={reduceMotion ? false : "hidden"}
             whileInView="show"
             viewport={{ once: true, amount: 0.15 }}
@@ -448,9 +454,14 @@ export default function Landing() {
                 whileHover={
                   reduceMotion
                     ? undefined
-                    : { y: -6, rotateX: 4, transition: { duration: 0.25 } }
+                    : {
+                        y: -6,
+                        rotateX: 4,
+                        transformPerspective: 1000,
+                        transition: { duration: 0.25 },
+                      }
                 }
-                className="glass group rounded-2xl p-5 transition-colors hover:border-emerald-500/40"
+                className="glass depth-3d group rounded-2xl p-5 transition-colors hover:border-emerald-500/40"
               >
                 <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors group-hover:bg-emerald-500/15 group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
                   <feature.icon className="h-4 w-4" aria-hidden="true" />
