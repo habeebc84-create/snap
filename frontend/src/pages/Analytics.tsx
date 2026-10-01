@@ -173,7 +173,7 @@ export default function Analytics() {
                     type="monotone"
                     dataKey="count"
                     name="Documents"
-                    stroke="hsl(172 66% 34%)"
+                    stroke="hsl(243 70% 55%)"
                     strokeWidth={2.5}
                     dot={{ r: 3 }}
                     activeDot={{ r: 5 }}
@@ -254,7 +254,7 @@ export default function Analytics() {
                     }
                   />
                   <Tooltip contentStyle={tooltipStyle} formatter={(value) => formatMoney(Number(value))} />
-                  <Bar dataKey="amount" fill="hsl(172 66% 34%)" radius={[6, 6, 0, 0]} />
+                  <Bar dataKey="amount" fill="hsl(243 70% 55%)" radius={[6, 6, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>

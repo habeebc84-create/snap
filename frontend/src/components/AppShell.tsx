@@ -107,7 +107,7 @@ export function AppShell() {
           className="pointer-events-none absolute inset-0 opacity-60"
           style={{
             background:
-              "radial-gradient(600px 300px at 0% 0%, hsl(172 66% 30% / 0.35), transparent 60%)",
+              "radial-gradient(600px 300px at 0% 0%, hsl(243 70% 55% / 0.35), transparent 60%)",
           }}
           aria-hidden="true"
         />

@@ -212,7 +212,7 @@ export default function Landing() {
           className="pointer-events-none absolute inset-0 opacity-70"
           style={{
             background:
-              "radial-gradient(900px 420px at 15% 0%, hsl(172 66% 30% / 0.16), transparent 65%), radial-gradient(700px 380px at 90% 20%, hsl(172 40% 40% / 0.12), transparent 60%)",
+              "radial-gradient(900px 420px at 15% 0%, hsl(243 70% 55% / 0.18), transparent 65%), radial-gradient(700px 380px at 90% 20%, hsl(226 80% 62% / 0.14), transparent 60%)",
           }}
           aria-hidden="true"
         />
@@ -224,7 +224,7 @@ export default function Landing() {
           >
             <motion.span
               variants={fadeUp}
-              className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-300"
+              className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1.5 text-xs font-medium text-primary"
             >
               <span className="relative flex h-2 w-2" aria-hidden="true">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-60" />
@@ -343,7 +343,7 @@ export default function Landing() {
                 ))}
               </div>
 
-              <div className="mt-4 flex items-center justify-between rounded-xl border border-emerald-500/25 bg-emerald-500/10 px-3.5 py-3">
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-primary/25 bg-primary/10 px-3.5 py-3">
                 <span className="text-sm font-semibold">Total</span>
                 <span className="font-display text-lg font-semibold tabular-nums">
                   ₹12,040.00
@@ -404,13 +404,13 @@ export default function Landing() {
                         transition: { duration: 0.2 },
                       }
                 }
-                className="depth-3d group relative rounded-xl border border-border/60 bg-background/70 p-3 transition-colors duration-200 hover:border-emerald-500/40 hover:shadow-soft"
+                className="depth-3d group relative rounded-xl border border-border/60 bg-background/70 p-3 transition-colors duration-200 hover:border-primary/40 hover:shadow-soft"
               >
                 <span className="absolute right-2.5 top-2.5 text-[10px] text-muted-foreground/70">
                   {index + 1}
                 </span>
                 <stage.icon
-                  className="h-4 w-4 text-emerald-600 dark:text-emerald-400"
+                  className="h-4 w-4 text-primary"
                   aria-hidden="true"
                 />
                 <p className="mt-2 text-xs font-semibold leading-tight">
@@ -461,9 +461,9 @@ export default function Landing() {
                         transition: { duration: 0.25 },
                       }
                 }
-                className="glass depth-3d group rounded-2xl p-5 transition-colors hover:border-emerald-500/40"
+                className="glass depth-3d group rounded-2xl p-5 transition-colors hover:border-primary/40"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors group-hover:bg-emerald-500/15 group-hover:text-emerald-700 dark:group-hover:text-emerald-300">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors group-hover:bg-primary/15 group-hover:text-primary">
                   <feature.icon className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <h3 className="mt-4 font-display text-lg font-semibold">
@@ -487,7 +487,7 @@ export default function Landing() {
             viewport={{ once: true, amount: 0.25 }}
             variants={fadeUp}
           >
-            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-emerald-400">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-indigo-300">
               Privacy model
             </p>
             <h2 className="mt-3 font-display text-2xl font-semibold sm:text-3xl">
@@ -551,7 +551,7 @@ export default function Landing() {
                 }
                 className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-4 transition-colors hover:bg-white/10"
               >
-                <item.icon className="h-4 w-4 shrink-0 text-emerald-400" aria-hidden="true" />
+                <item.icon className="h-4 w-4 shrink-0 text-indigo-300" aria-hidden="true" />
                 <span className="text-sm text-white/85">{item.label}</span>
               </motion.div>
             ))}
@@ -574,7 +574,7 @@ export default function Landing() {
               className="pointer-events-none absolute inset-0 opacity-80"
               style={{
                 background:
-                  "radial-gradient(600px 260px at 50% 0%, hsl(172 66% 30% / 0.18), transparent 70%)",
+                  "radial-gradient(600px 260px at 50% 0%, hsl(243 70% 55% / 0.2), transparent 70%)",
               }}
               aria-hidden="true"
             />
@@ -587,7 +587,7 @@ export default function Landing() {
             >
               <h2 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
                 Private document intelligence.
-                <span className="block text-emerald-700 dark:text-emerald-400">
+                <span className="block text-primary">
                   Powered locally.
                 </span>
               </h2>
@@ -615,7 +615,7 @@ export default function Landing() {
       <footer className="border-t border-border/60 py-8">
         <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-4 text-xs text-muted-foreground sm:flex-row sm:px-6">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+            <ShieldCheck className="h-4 w-4 text-primary" aria-hidden="true" />
             <span>SecureDoc AI — runs fully offline on this device.</span>
           </div>
           <nav className="flex items-center gap-5" aria-label="Footer">

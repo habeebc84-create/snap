@@ -270,7 +270,7 @@ export default function Dashboard() {
                           fontSize: 12,
                         }}
                       />
-                      <Bar dataKey="count" fill="hsl(172 66% 34%)" radius={[5, 5, 0, 0]} />
+                      <Bar dataKey="count" fill="hsl(243 70% 55%)" radius={[5, 5, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
