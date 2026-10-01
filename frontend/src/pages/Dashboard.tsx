@@ -7,8 +7,10 @@ import {
   FileStack,
   Inbox,
   Plus,
+  ShieldCheck,
   Sparkles,
   Upload,
+  Zap,
 } from "lucide-react";
 import {
   Bar,
@@ -23,18 +25,18 @@ import {
 } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, Skeleton, Button, Badge } from "../components/ui";
 import { DocumentRow, EmptyState, StatusBadge, TypeBadge } from "../components/status";
-import { useAnalytics, useLoadDemo, useSearch, useSettings } from "../hooks/useApi";
+import { useAnalytics, useLoadDemo, useSearch } from "../hooks/useApi";
 import { useToast } from "../components/toast";
 import { formatBytes, formatNumber, greeting, cn } from "../lib/utils";
 
 const TYPE_COLORS: Record<string, string> = {
-  invoice: "#0d9488",
+  invoice: "#2563eb",
   receipt: "#0284c7",
   purchase_order: "#7c3aed",
   contract: "#d97706",
-  form: "#475569",
-  other: "#94a3b8",
-  unclassified: "#cbd5e1",
+  form: "#10b981",
+  other: "#64748b",
+  unclassified: "#94a3b8",
 };
 
 function KpiCard({
@@ -48,26 +50,28 @@ function KpiCard({
   value: string;
   hint?: string;
   icon: React.ReactNode;
-  tone?: "default" | "warning" | "success";
+  tone?: "default" | "warning" | "success" | "info";
 }) {
   return (
-    <Card className="lift-3d p-5">
+    <Card className="lift-3d relative overflow-hidden border border-border/80 p-5 backdrop-blur-sm">
       <div className="flex items-start justify-between">
         <p className="field-label">{label}</p>
         <span
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-lg",
+            "flex h-9 w-9 items-center justify-center rounded-xl transition-colors",
             tone === "warning"
-              ? "bg-amber-500/12 text-amber-600"
+              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400"
               : tone === "success"
-                ? "bg-emerald-500/12 text-emerald-600"
-                : "bg-accent text-accent-foreground",
+                ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400"
+                : tone === "info"
+                  ? "bg-blue-500/15 text-blue-600 dark:text-blue-400"
+                  : "bg-primary/10 text-primary",
           )}
         >
           {icon}
         </span>
       </div>
-      <p className="mt-3 font-display text-3xl font-semibold tabular-nums">{value}</p>
+      <p className="mt-3 font-display text-3xl font-semibold tabular-nums tracking-tight">{value}</p>
       {hint && <p className="mt-1 text-xs text-muted-foreground">{hint}</p>}
     </Card>
   );
@@ -75,7 +79,6 @@ function KpiCard({
 
 export default function Dashboard() {
   const analytics = useAnalytics();
-  const settings = useSettings();
   const reviewQueue = useSearch({ needs_review: true, limit: 5 });
   const demo = useLoadDemo();
   const toast = useToast();
@@ -101,26 +104,32 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6 animate-fade-up">
-      {/* Greeting */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-display text-3xl font-semibold tracking-tight sm:text-4xl">
-            {greeting()}
-          </h1>
-          <p className="mt-1.5 flex items-center gap-2 text-sm text-muted-foreground">
-            <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" aria-hidden="true" />
-            Your documents are processed locally.
-          </p>
-        </div>
-        <div className="flex gap-2.5">
-          <Button variant="outline" onClick={loadDemo} disabled={demo.isPending}>
-            <Sparkles className="h-4 w-4" aria-hidden="true" />
-            {demo.isPending ? "Generating…" : "Load Demo Data"}
-          </Button>
-          <Button onClick={() => navigate("/scan")}>
-            <Plus className="h-4 w-4" aria-hidden="true" />
-            Scan Document
-          </Button>
+      {/* Header Banner */}
+      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 sm:p-8">
+        <div className="flex flex-wrap items-center justify-between gap-6">
+          <div className="max-w-xl space-y-2">
+            <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden="true" />
+              100% Local & Offline Processing
+            </div>
+            <h1 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
+              {greeting()}
+            </h1>
+            <p className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-emerald-500" aria-hidden="true" />
+              Your documents are processed locally. Intelligent document extraction on your device.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" onClick={loadDemo} disabled={demo.isPending} className="shadow-sm">
+              <Sparkles className="h-4 w-4" aria-hidden="true" />
+              {demo.isPending ? "Generating…" : "Load Demo Data"}
+            </Button>
+            <Button onClick={() => navigate("/scan")} className="shadow-sm">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Scan Document
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -151,31 +160,80 @@ export default function Dashboard() {
                 <KpiCard
                   label="Total documents"
                   value={formatNumber(kpis?.total_documents ?? 0)}
-                  hint="Stored in the local database"
-                  icon={<FileStack className="h-4 w-4" aria-hidden="true" />}
+                  hint="Stored in local database"
+                  icon={<FileStack className="h-4.5 w-4.5" aria-hidden="true" />}
+                  tone="info"
                 />
                 <KpiCard
                   label="Processed today"
                   value={formatNumber(kpis?.processed_today ?? 0)}
-                  hint="Imported in the last 24 hours"
-                  icon={<BarChart3 className="h-4 w-4" aria-hidden="true" />}
+                  hint="Imported in last 24h"
+                  icon={<BarChart3 className="h-4.5 w-4.5" aria-hidden="true" />}
                   tone="success"
                 />
                 <KpiCard
                   label="Needs review"
                   value={formatNumber(kpis?.needs_review ?? 0)}
-                  hint="Low confidence or validation issues"
-                  icon={<ClipboardCheck className="h-4 w-4" aria-hidden="true" />}
+                  hint="Low AI confidence or validation"
+                  icon={<ClipboardCheck className="h-4.5 w-4.5" aria-hidden="true" />}
                   tone={(kpis?.needs_review ?? 0) > 0 ? "warning" : "default"}
                 />
                 <KpiCard
                   label="Storage used"
                   value={formatBytes(kpis?.storage_used_bytes ?? 0)}
-                  hint="Documents + database + page images"
-                  icon={<Database className="h-4 w-4" aria-hidden="true" />}
+                  hint="Documents & cache"
+                  icon={<Database className="h-4.5 w-4.5" aria-hidden="true" />}
                 />
               </>
             )}
+          </div>
+
+          {/* Quick Actions Bar */}
+          <div className="grid gap-4 sm:grid-cols-3">
+            <Card
+              onClick={() => navigate("/scan")}
+              className="cursor-pointer border-border/80 p-4 transition-all hover:border-primary/50 hover:bg-primary/5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                  <Upload className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Upload & Scan</h3>
+                  <p className="text-xs text-muted-foreground">Add new invoices, receipts or PDFs</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card
+              onClick={() => navigate("/review")}
+              className="cursor-pointer border-border/80 p-4 transition-all hover:border-amber-500/50 hover:bg-amber-500/5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                  <Zap className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Review Queue</h3>
+                  <p className="text-xs text-muted-foreground">Inspect fields requiring human verification</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card
+              onClick={() => navigate("/analytics")}
+              className="cursor-pointer border-border/80 p-4 transition-all hover:border-blue-500/50 hover:bg-blue-500/5"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
+                  <BarChart3 className="h-5 w-5" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Analytics</h3>
+                  <p className="text-xs text-muted-foreground">Detailed processing trends & insights</p>
+                </div>
+              </div>
+            </Card>
           </div>
 
           {/* Charts */}
@@ -183,7 +241,7 @@ export default function Dashboard() {
             <Card className="lg:col-span-2">
               <CardHeader>
                 <CardTitle>Document distribution</CardTitle>
-                <CardDescription>By classification, from the local database</CardDescription>
+                <CardDescription>By classification, from local database</CardDescription>
               </CardHeader>
               <CardContent>
                 {distribution.length === 0 ? (
@@ -270,7 +328,7 @@ export default function Dashboard() {
                           fontSize: 12,
                         }}
                       />
-                      <Bar dataKey="count" fill="hsl(172 66% 34%)" radius={[5, 5, 0, 0]} />
+                      <Bar dataKey="count" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
@@ -287,7 +345,7 @@ export default function Dashboard() {
               </div>
               <Link
                 to="/review"
-                className="flex items-center gap-1 text-xs font-medium text-primary underline-offset-4 hover:underline"
+                className="flex items-center gap-1 text-xs font-semibold text-primary underline-offset-4 hover:underline"
               >
                 Open queue <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
               </Link>

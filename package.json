@@ -1,0 +1,11 @@
+{
+  "name": "securedoc-ai",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "typecheck": "cd frontend && npm run typecheck",
+    "test": "cd frontend && npm run test",
+    "dev": "cd frontend && npm run dev"
+  }
+}
