@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   motion,
   useMotionValue,
   useReducedMotion,
+  useScroll,
   useSpring,
   useTransform,
 } from "framer-motion";
@@ -21,6 +22,7 @@ import {
   ScanText,
   Search,
   ShieldCheck,
+  Sparkles,
   Tags,
   UserCheck,
   Workflow,
@@ -82,11 +84,84 @@ function GlowBar({ value }: { value: number }) {
   );
 }
 
+const TICKER = [
+  "On-device OCR",
+  "GSTIN validation",
+  "Confidence scoring",
+  "Human review queue",
+  "Local SQLite",
+  "JSON · CSV · XLSX · PDF",
+  "Zero telemetry",
+  "Offline-first",
+];
+
+/** Counts a statistic up once it scrolls into view. */
+function useCountUp(
+  target: number,
+  active: boolean,
+  reduceMotion: boolean | null,
+) {
+  const [value, setValue] = useState(reduceMotion ? target : 0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setValue(target);
+      return;
+    }
+    if (!active) return;
+    let frame = 0;
+    const start = performance.now();
+    const duration = 1100;
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(target * eased));
+      if (progress < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [target, active, reduceMotion]);
+
+  return value;
+}
+
 const STATS = [
   { value: "0", label: "bytes leave the device", icon: ShieldCheck },
   { value: "9", label: "local pipeline stages", icon: Workflow },
   { value: "4", label: "export formats", icon: FileStack },
 ];
+
+function StatTile({
+  stat,
+  index,
+  active,
+  reduceMotion,
+}: {
+  stat: (typeof STATS)[number];
+  index: number;
+  active: boolean;
+  reduceMotion: boolean | null;
+}) {
+  const numeric = Number(stat.value);
+  const shown = useCountUp(numeric, active, reduceMotion);
+  return (
+    <div
+      className={cn(
+        "lg-tile lg-glass lg-hairline flex items-center justify-between gap-4 rounded-2xl px-5 py-4",
+        index === 1 && "relative z-10",
+        index === 2 && "relative z-20",
+      )}
+    >
+      <div>
+        <p className="font-display text-2xl font-semibold lg-text-gradient lg-anim-gradient">
+          {Number.isFinite(numeric) ? shown : stat.value}
+        </p>
+        <p className="mt-0.5 text-xs text-white/55">{stat.label}</p>
+      </div>
+      <stat.icon className="h-5 w-5 text-cyan-300/80" aria-hidden="true" />
+    </div>
+  );
+}
 
 const INVOICE_FIELDS = [
   { label: "Invoice number", value: "INV-2026-1042", score: 0.97 },
@@ -165,6 +240,11 @@ export default function Landing() {
     document.documentElement.removeAttribute("data-boot");
   }, []);
 
+  const [statsActive, setStatsActive] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const orbFar = useTransform(scrollYProgress, [0, 1], [0, 190]);
+  const orbNear = useTransform(scrollYProgress, [0, 1], [0, -150]);
+
   const tiltRef = useRef<HTMLDivElement>(null);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);
@@ -194,9 +274,20 @@ export default function Landing() {
     <div className="lg-stage min-h-screen overflow-hidden">
       {/* ------------------------------------------------ liquid backdrop */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-        <div className="lg-orb lg-orb-purple" />
-        <div className="lg-orb lg-orb-cyan" />
-        <div className="lg-orb lg-orb-violet" />
+        {/* Parallax layers: the orbs drift on scroll as well as on their own. */}
+        <motion.div
+          className="absolute inset-0"
+          style={reduceMotion ? undefined : { y: orbFar }}
+        >
+          <div className="lg-orb lg-orb-purple" />
+          <div className="lg-orb lg-orb-cyan" />
+        </motion.div>
+        <motion.div
+          className="absolute inset-0"
+          style={reduceMotion ? undefined : { y: orbNear }}
+        >
+          <div className="lg-orb lg-orb-violet" />
+        </motion.div>
         <div className="lg-grid-overlay absolute inset-0" />
       </div>
 
@@ -300,25 +391,18 @@ export default function Landing() {
             {/* 3D overlapping glass stat tiles */}
             <motion.div
               variants={fadeUp}
+              onViewportEnter={() => setStatsActive(true)}
+              viewport={{ once: true, amount: 0.35 }}
               className="lg-tile-stack mt-12 max-w-md [perspective:1100px]"
             >
               {STATS.map((stat, index) => (
-                <div
+                <StatTile
                   key={stat.label}
-                  className={cn(
-                    "lg-tile lg-glass lg-hairline flex items-center justify-between gap-4 rounded-2xl px-5 py-4",
-                    index === 1 && "relative z-10",
-                    index === 2 && "relative z-20",
-                  )}
-                >
-                  <div>
-                    <p className="font-display text-2xl font-semibold lg-text-gradient">
-                      {stat.value}
-                    </p>
-                    <p className="mt-0.5 text-xs text-white/55">{stat.label}</p>
-                  </div>
-                  <stat.icon className="h-5 w-5 text-cyan-300/80" aria-hidden="true" />
-                </div>
+                  stat={stat}
+                  index={index}
+                  active={statsActive}
+                  reduceMotion={reduceMotion}
+                />
               ))}
             </motion.div>
           </motion.div>
@@ -396,25 +480,51 @@ export default function Landing() {
 
               {/* glowing data fields hovering above the glass */}
               <div
-                className="lg-field absolute -left-6 top-16 hidden items-center gap-2 px-3 py-2 sm:flex"
+                className="absolute -left-6 top-16 hidden sm:block"
                 style={{ transform: "translateZ(80px)" }}
               >
-                <CheckCircle2 className="h-3.5 w-3.5 text-cyan-300" aria-hidden="true" />
-                <span className="text-[11px] font-medium text-cyan-100">
-                  GSTIN ✓ 27AAACA1234A1Z5
-                </span>
+                <div className="lg-field lg-chip flex items-center gap-2 px-3 py-2">
+                  <CheckCircle2 className="h-3.5 w-3.5 text-cyan-300" aria-hidden="true" />
+                  <span className="text-[11px] font-medium text-cyan-100">
+                    GSTIN ✓ 27AAACA1234A1Z5
+                  </span>
+                </div>
               </div>
               <div
-                className="lg-field lg-field-purple absolute -right-5 bottom-24 hidden items-center gap-2 px-3 py-2 sm:flex"
+                className="absolute -right-5 bottom-24 hidden sm:block"
                 style={{ transform: "translateZ(110px)" }}
               >
-                <ScanText className="h-3.5 w-3.5 text-violet-200" aria-hidden="true" />
-                <span className="text-[11px] font-medium text-violet-100">
-                  Tesseract OCR · 0 network calls
-                </span>
+                <div className="lg-field lg-field-purple lg-chip lg-chip-slow flex items-center gap-2 px-3 py-2">
+                  <ScanText className="h-3.5 w-3.5 text-violet-200" aria-hidden="true" />
+                  <span className="text-[11px] font-medium text-violet-100">
+                    Tesseract OCR · 0 network calls
+                  </span>
+                </div>
               </div>
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------------ ticker */}
+      <section className="relative pb-6">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
+          <div className="lg-glass lg-marquee rounded-2xl py-3.5">
+            <div className="lg-marquee-track">
+              {[...TICKER, ...TICKER].map((item, index) => (
+                <span
+                  key={`${item}-${index}`}
+                  className="flex items-center gap-2 whitespace-nowrap px-5 text-xs font-medium uppercase tracking-[0.14em] text-white/55"
+                >
+                  <Sparkles
+                    className="h-3 w-3 shrink-0 text-cyan-300/80"
+                    aria-hidden="true"
+                  />
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
@@ -505,7 +615,7 @@ export default function Landing() {
                     ? undefined
                     : { y: -6, transition: { duration: 0.25 } }
                 }
-                className="lg-glass lg-hairline rounded-2xl p-5"
+                className="lg-glass lg-hairline lg-sheen rounded-2xl p-5"
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500/30 to-cyan-400/25 text-cyan-200 shadow-[0_0_22px_rgba(139,92,246,0.35)]">
                   <feature.icon className="h-4 w-4" aria-hidden="true" />
@@ -642,7 +752,9 @@ export default function Landing() {
             >
               <h2 className="lg-glow-text font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">
                 Private document intelligence.
-                <span className="block lg-text-gradient">Powered locally.</span>
+                <span className="block lg-text-gradient lg-anim-gradient">
+                  Powered locally.
+                </span>
               </h2>
               <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/60 sm:text-base">
                 Drop in an invoice or receipt and watch it become validated,

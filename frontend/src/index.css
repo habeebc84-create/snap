@@ -440,16 +440,106 @@
     user-select: none;
   }
 
+  /* ============================================ motion for the glass stage */
+  /* A gradient that slowly pans across display type. */
+  .lg-anim-gradient {
+    background-size: 220% 100%;
+    animation: lg-gradient-pan 9s ease-in-out infinite;
+  }
+
+  @keyframes lg-gradient-pan {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  /* Drifting liquid highlight inside the gradient pills (transform only). */
+  .lg-btn::after {
+    content: "";
+    position: absolute;
+    inset: -60%;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.42), transparent 42%);
+    opacity: 0.55;
+    animation: lg-liquid 7s ease-in-out infinite;
+  }
+
+  @keyframes lg-liquid {
+    0%, 100% { transform: translate3d(-34%, 0, 0) scale(1); }
+    50% { transform: translate3d(34%, 0, 0) scale(1.16); }
+  }
+
+  /* Infinite capability ticker; pauses while hovered. */
+  .lg-marquee {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  }
+
+  .lg-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: lg-marquee 34s linear infinite;
+  }
+
+  .lg-marquee:hover .lg-marquee-track {
+    animation-play-state: paused;
+  }
+
+  @keyframes lg-marquee {
+    from { transform: translate3d(0, 0, 0); }
+    to { transform: translate3d(-50%, 0, 0); }
+  }
+
+  /* Staggered floating chips above the invoice. */
+  .lg-chip {
+    animation: lg-chip-float 7s ease-in-out infinite;
+  }
+  .lg-chip-slow {
+    animation-duration: 9.5s;
+    animation-delay: -3.5s;
+  }
+
+  @keyframes lg-chip-float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -10px, 0); }
+  }
+
+  /* Sheen that sweeps across a glass card on hover. */
+  .lg-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .lg-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(115deg, transparent 32%, rgba(255, 255, 255, 0.16) 48%, transparent 64%);
+    transform: translateX(-130%);
+    transition: transform 0.85s ease;
+  }
+  .lg-sheen:hover::after {
+    transform: translateX(130%);
+  }
+
   /* Every liquid animation stops for reduced-motion users. */
   @media (prefers-reduced-motion: reduce) {
     .lg-orb,
     .lg-btn::before,
-    .lg-float {
+    .lg-btn::after,
+    .lg-float,
+    .lg-anim-gradient,
+    .lg-marquee-track,
+    .lg-chip {
       animation: none !important;
     }
     .lg-tile,
     .lg-tile:hover {
       transform: none;
+    }
+    .lg-sheen::after {
+      transition: none;
+      transform: translateX(-130%);
     }
   }
 
