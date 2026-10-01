@@ -5,6 +5,7 @@ Offline document intelligence. Nothing is sent to external services.
 
 from __future__ import annotations
 
+from contextlib import asynccontextmanager
 import logging
 
 from fastapi import FastAPI, Request
@@ -23,6 +24,17 @@ logging.basicConfig(
 )
 logger = logging.getLogger("securedoc")
 
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    init_db()
+    logger.info(
+        "SecureDoc AI started (env=%s, storage=%s)",
+        app_settings.app_env, app_settings.document_storage_path,
+    )
+    yield
+
+
 app = FastAPI(
     title=APP_NAME,
     description=(
@@ -31,6 +43,7 @@ app = FastAPI(
         "No API keys, no cloud calls."
     ),
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # Dev-friendly CORS; the frontend normally reaches the API through the Vite proxy.
@@ -75,15 +88,6 @@ async def unhandled_error_handler(_request: Request, exc: Exception) -> JSONResp
                 "hint": "Please try again. Your document was not sent anywhere.",
             }
         },
-    )
-
-
-@app.on_event("startup")
-def on_startup() -> None:
-    init_db()
-    logger.info(
-        "SecureDoc AI started (env=%s, storage=%s)",
-        app_settings.app_env, app_settings.document_storage_path,
     )
 
 
