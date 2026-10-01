@@ -196,6 +196,254 @@
     }
   }
 
+  /* ============================================ liquid glass landing system
+     Scoped to the marketing page. Forces an obsidian, dark-glass surface
+     regardless of the app theme, so the landing always reads premium. */
+  .lg-stage {
+    position: relative;
+    isolation: isolate;
+    background:
+      radial-gradient(1100px 760px at 50% -12%, #1a0b3d 0%, transparent 58%),
+      radial-gradient(900px 700px at 92% 8%, #062a3a 0%, transparent 55%),
+      linear-gradient(180deg, #050510 0%, #070613 45%, #04050d 100%);
+    color: #fff;
+  }
+
+  .lg-orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(72px);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    will-change: transform;
+  }
+
+  .lg-orb-purple {
+    top: -12rem;
+    left: -8rem;
+    width: 36rem;
+    height: 36rem;
+    opacity: 0.5;
+    background: radial-gradient(circle at center, #a855f7 0%, rgba(124, 58, 237, 0.35) 45%, transparent 72%);
+    animation: lg-drift-a 26s ease-in-out infinite alternate;
+  }
+
+  .lg-orb-cyan {
+    top: 6rem;
+    right: -10rem;
+    width: 32rem;
+    height: 32rem;
+    opacity: 0.42;
+    background: radial-gradient(circle at center, #22d3ee 0%, rgba(6, 182, 212, 0.3) 45%, transparent 72%);
+    animation: lg-drift-b 32s ease-in-out infinite alternate;
+  }
+
+  .lg-orb-violet {
+    bottom: -14rem;
+    left: 22%;
+    width: 40rem;
+    height: 40rem;
+    opacity: 0.34;
+    background: radial-gradient(circle at center, #6d28d9 0%, rgba(168, 85, 247, 0.28) 50%, transparent 74%);
+    animation: lg-drift-a 38s ease-in-out infinite alternate-reverse;
+  }
+
+  @keyframes lg-drift-a {
+    from { transform: translate3d(-5%, -3%, 0) scale(0.95); }
+    to { transform: translate3d(9%, 7%, 0) scale(1.14); }
+  }
+
+  @keyframes lg-drift-b {
+    from { transform: translate3d(6%, 4%, 0) scale(1.1); }
+    to { transform: translate3d(-8%, -5%, 0) scale(0.94); }
+  }
+
+  /* Fine grid + vignette so the glass has something to refract. */
+  .lg-grid-overlay {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 68px 68px;
+    mask-image: radial-gradient(1100px 700px at 50% 0%, black, transparent 78%);
+  }
+
+  /* ------------------------------------------------------------ glass panel */
+  .lg-glass {
+    background: linear-gradient(150deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.028));
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(22px) saturate(150%);
+    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    box-shadow:
+      0 28px 70px -34px rgba(0, 0, 0, 0.95),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+  }
+
+  .lg-glass-strong {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.045));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(34px) saturate(160%);
+    -webkit-backdrop-filter: blur(34px) saturate(160%);
+    box-shadow:
+      0 40px 90px -40px rgba(0, 0, 0, 1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  }
+
+  /* Translucent 1px hairline used on hover states. */
+  .lg-hairline {
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  }
+  .lg-hairline:hover {
+    border-color: rgba(196, 181, 253, 0.45);
+    box-shadow: 0 30px 70px -34px rgba(139, 92, 246, 0.65);
+  }
+
+  /* ------------------------------------------------------- liquid buttons */
+  .lg-btn {
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #fff;
+    background: linear-gradient(100deg, #6d28d9 0%, #a855f7 38%, #22d3ee 100%);
+    box-shadow:
+      0 16px 44px -16px rgba(168, 85, 247, 0.75),
+      0 8px 30px -18px rgba(34, 211, 238, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+
+  /* Slow liquid sheen sliding across the pill. */
+  .lg-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 15%, rgba(255, 255, 255, 0.42) 45%, transparent 70%);
+    transform: translateX(-120%);
+    animation: lg-sheen 5.5s ease-in-out infinite;
+  }
+
+  .lg-btn:hover {
+    filter: brightness(1.08);
+  }
+
+  @keyframes lg-sheen {
+    0%, 55% { transform: translateX(-120%); }
+    85%, 100% { transform: translateX(120%); }
+  }
+
+  .lg-btn-ghost {
+    border-radius: 9999px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #fff;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(130%);
+    -webkit-backdrop-filter: blur(16px) saturate(130%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+  }
+  .lg-btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(196, 181, 253, 0.4);
+  }
+
+  /* ---------------------------------------------------- 3D glass stat tiles */
+  .lg-tile {
+    border-radius: 1.15rem;
+    transform: perspective(1000px) rotateX(7deg) rotateY(-9deg) translateZ(0);
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+    will-change: transform;
+  }
+  .lg-tile:hover {
+    transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-8px) translateZ(30px);
+    box-shadow: 0 40px 80px -36px rgba(139, 92, 246, 0.8);
+  }
+
+  /* Overlapping stack — each tile shifts and stacks on top of the previous. */
+  .lg-tile-stack > .lg-tile:nth-child(2) {
+    margin-top: -1.1rem;
+    margin-left: 1.6rem;
+  }
+  .lg-tile-stack > .lg-tile:nth-child(3) {
+    margin-top: -1.1rem;
+    margin-left: 3.2rem;
+  }
+
+  /* --------------------------------------------------- isometric glass invoice */
+  .lg-iso {
+    transform: perspective(1500px) rotateX(21deg) rotateY(-19deg) rotateZ(1.5deg);
+    transform-style: preserve-3d;
+  }
+
+  .lg-float {
+    animation: lg-float 8s ease-in-out infinite;
+  }
+
+  @keyframes lg-float {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(0, -14px, 0); }
+  }
+
+  /* Glowing data field hovering above the invoice. */
+  .lg-field {
+    border-radius: 0.7rem;
+    border: 1px solid rgba(34, 211, 238, 0.38);
+    background: linear-gradient(140deg, rgba(34, 211, 238, 0.14), rgba(34, 211, 238, 0.04));
+    box-shadow:
+      0 0 26px rgba(34, 211, 238, 0.3),
+      inset 0 0 14px rgba(34, 211, 238, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .lg-field-purple {
+    border-color: rgba(168, 85, 247, 0.42);
+    background: linear-gradient(140deg, rgba(168, 85, 247, 0.16), rgba(168, 85, 247, 0.04));
+    box-shadow:
+      0 0 26px rgba(168, 85, 247, 0.34),
+      inset 0 0 14px rgba(168, 85, 247, 0.12);
+  }
+
+  /* --------------------------------------------------------------- type fx */
+  .lg-glow-text {
+    text-shadow:
+      0 0 32px rgba(168, 85, 247, 0.4),
+      0 0 90px rgba(34, 211, 238, 0.22);
+  }
+
+  .lg-text-gradient {
+    background: linear-gradient(102deg, #ffffff 6%, #d8caff 34%, #7dd3fc 62%, #ffffff 96%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lg-watermark {
+    position: absolute;
+    right: 1.5rem;
+    bottom: 1.25rem;
+    z-index: 30;
+    font-size: 0.7rem;
+    letter-spacing: 0.52em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.13);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  /* Every liquid animation stops for reduced-motion users. */
+  @media (prefers-reduced-motion: reduce) {
+    .lg-orb,
+    .lg-btn::before,
+    .lg-float {
+      animation: none !important;
+    }
+    .lg-tile,
+    .lg-tile:hover {
+      transform: none;
+    }
+  }
+
   .scrollbar-thin {
     scrollbar-width: thin;
   }
