@@ -117,7 +117,18 @@
     @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground;
   }
 
-  /* ----------------------------------------------------------- 3D depth */
+  /* ----------------------------------------------------------- 3D depth
+     Perspective must live on the element that is *itself* transformed
+     (via `transformPerspective` in framer-motion, or a `perspective()`
+     function inside the CSS transform). Putting `perspective` on a grid
+     container tilts every card around the grid's centre instead of its own,
+     which is what made the card grid look skewed. */
+  .depth-3d {
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+
+  /* Kept for a container that genuinely wants one shared vanishing point. */
   .scene {
     perspective: 1200px;
     perspective-origin: 50% 50%;
@@ -133,14 +144,19 @@
 
   .lift-3d {
     transform-style: preserve-3d;
+    backface-visibility: hidden;
+    will-change: transform;
     transition:
       transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 0.35s ease,
       border-color 0.35s ease;
   }
 
+  /* `perspective()` belongs inside the transform — perspective set on the
+     element itself only affects its children, so the previous hover read as
+     a flat squish with no depth. */
   .lift-3d:hover {
-    transform: translateZ(16px) rotateX(3deg);
+    transform: perspective(900px) translateZ(14px) rotateX(2.5deg);
     box-shadow: 0 22px 44px -24px rgb(15 23 42 / 0.4);
   }
 
@@ -164,6 +180,20 @@
   @keyframes drift-orb {
     from { transform: translate3d(-8%, -4%, 0) scale(0.92); }
     to { transform: translate3d(12%, 8%, 0) scale(1.1); }
+  }
+
+  /* Never apply depth transforms when the OS asks for reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .depth-3d,
+    .scene,
+    .lift-3d {
+      transform-style: flat;
+      perspective: none;
+      will-change: auto;
+    }
+    .lift-3d:hover {
+      transform: none;
+    }
   }
 
   .scrollbar-thin {
