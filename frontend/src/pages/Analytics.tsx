@@ -19,8 +19,8 @@ import { useAnalytics } from "../hooks/useApi";
 import { formatBytes, formatMoney, formatNumber, titleCase } from "../lib/utils";
 
 const TYPE_COLORS: Record<string, string> = {
-  invoice: "#0d9488",
-  receipt: "#0284c7",
+  invoice: "#4f46e5",
+  receipt: "#0891b2",
   purchase_order: "#7c3aed",
   contract: "#d97706",
   form: "#475569",

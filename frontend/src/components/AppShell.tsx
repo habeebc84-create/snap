@@ -52,7 +52,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
     <div className="flex h-full flex-col">
       <div className="px-5 py-5">
         <Link to="/" className="flex items-center gap-2.5" aria-label="SecureDoc AI home">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-900 shadow-soft">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-400 to-blue-600 text-white shadow-soft">
             <ShieldCheck className="h-5 w-5" aria-hidden="true" />
           </div>
           <div className="leading-tight">
