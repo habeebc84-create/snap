@@ -10,12 +10,22 @@
     <title>SecureDoc AI — Private document intelligence</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Non-blocking: web fonts swap in after first paint instead of delaying it. -->
     <link
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Instrument+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <script>
-      // Apply stored theme before first paint to avoid a flash.
+      // Apply stored theme and the correct boot surface before first paint so
+      // neither the theme nor the landing background flashes on load.
       (function () {
         try {
           var stored = localStorage.getItem("securedoc.theme") || "system";
@@ -24,6 +34,11 @@
             (stored === "system" &&
               window.matchMedia("(prefers-color-scheme: dark)").matches);
           if (dark) document.documentElement.classList.add("dark");
+
+          var path = window.location.pathname;
+          if (path === "/" || path === "") {
+            document.documentElement.setAttribute("data-boot", "landing");
+          }
         } catch (e) {}
       })();
     </script>

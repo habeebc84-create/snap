@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import {
   motion,
@@ -158,6 +158,13 @@ const PRIVACY_POINTS = [
 
 export default function Landing() {
   const reduceMotion = useReducedMotion();
+
+  // The inline boot script paints an obsidian canvas so there is no light
+  // flash; hand the background back to the stage once it has mounted.
+  useEffect(() => {
+    document.documentElement.removeAttribute("data-boot");
+  }, []);
+
   const tiltRef = useRef<HTMLDivElement>(null);
   const pointerX = useMotionValue(0);
   const pointerY = useMotionValue(0);

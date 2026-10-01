@@ -65,6 +65,15 @@
     background-attachment: fixed;
   }
 
+  /* Paint the obsidian canvas *before* React mounts so landing visitors never
+     see the light body background flash. The attribute is set by the inline
+     script in index.html and removed once the landing has mounted. */
+  html[data-boot="landing"] #root {
+    background:
+      radial-gradient(1100px 760px at 50% -12%, #1a0b3d 0%, transparent 58%),
+      linear-gradient(180deg, #050510 0%, #070613 45%, #04050d 100%);
+  }
+
   .app-depth-grid {
     background-image:
       linear-gradient(hsl(var(--border) / 0.32) 1px, transparent 1px),
@@ -209,41 +218,42 @@
     color: #fff;
   }
 
+  /* Kept deliberately cheap: a large blurred, blended, permanently-composited
+     layer is what made first paint feel slow, so orbs blur less, skip blend
+     modes and never hold a will-change layer. */
   .lg-orb {
     position: absolute;
     border-radius: 9999px;
-    filter: blur(72px);
-    mix-blend-mode: screen;
+    filter: blur(52px);
     pointer-events: none;
-    will-change: transform;
   }
 
   .lg-orb-purple {
-    top: -12rem;
+    top: -10rem;
     left: -8rem;
-    width: 36rem;
-    height: 36rem;
-    opacity: 0.5;
+    width: 30rem;
+    height: 30rem;
+    opacity: 0.46;
     background: radial-gradient(circle at center, #a855f7 0%, rgba(124, 58, 237, 0.35) 45%, transparent 72%);
     animation: lg-drift-a 26s ease-in-out infinite alternate;
   }
 
   .lg-orb-cyan {
     top: 6rem;
-    right: -10rem;
-    width: 32rem;
-    height: 32rem;
-    opacity: 0.42;
+    right: -9rem;
+    width: 26rem;
+    height: 26rem;
+    opacity: 0.38;
     background: radial-gradient(circle at center, #22d3ee 0%, rgba(6, 182, 212, 0.3) 45%, transparent 72%);
     animation: lg-drift-b 32s ease-in-out infinite alternate;
   }
 
   .lg-orb-violet {
-    bottom: -14rem;
+    bottom: -12rem;
     left: 22%;
-    width: 40rem;
-    height: 40rem;
-    opacity: 0.34;
+    width: 32rem;
+    height: 32rem;
+    opacity: 0.3;
     background: radial-gradient(circle at center, #6d28d9 0%, rgba(168, 85, 247, 0.28) 50%, transparent 74%);
     animation: lg-drift-a 38s ease-in-out infinite alternate-reverse;
   }
@@ -271,8 +281,8 @@
   .lg-glass {
     background: linear-gradient(150deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.028));
     border: 1px solid rgba(255, 255, 255, 0.12);
-    backdrop-filter: blur(22px) saturate(150%);
-    -webkit-backdrop-filter: blur(22px) saturate(150%);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
     box-shadow:
       0 28px 70px -34px rgba(0, 0, 0, 0.95),
       inset 0 1px 0 rgba(255, 255, 255, 0.16),
@@ -282,8 +292,8 @@
   .lg-glass-strong {
     background: linear-gradient(155deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.045));
     border: 1px solid rgba(255, 255, 255, 0.16);
-    backdrop-filter: blur(34px) saturate(160%);
-    -webkit-backdrop-filter: blur(34px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
     box-shadow:
       0 40px 90px -40px rgba(0, 0, 0, 1),
       inset 0 1px 0 rgba(255, 255, 255, 0.22);
@@ -352,7 +362,6 @@
     transform: perspective(1000px) rotateX(7deg) rotateY(-9deg) translateZ(0);
     transform-style: preserve-3d;
     transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
-    will-change: transform;
   }
   .lg-tile:hover {
     transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(-8px) translateZ(30px);
